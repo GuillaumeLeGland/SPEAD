@@ -6,6 +6,6 @@ Its main module is jamstecrest_gausssecomodel1D.m. The model parameters can be m
 
 A more user-friendly version (SPEAD1.0) able to compute all the quantities and plot all the figures mentioned in the article will be uploaded by the end of September. For this definitive version, compatibility with GNU Octave and with several operation systems will be checked.
 
-Environmental variables (temperature, vertical diffusivity, miwed layer depth and Photosynthetically Available Radiation) and observational data to validate the model are located in the INPUTS folder.
+Environmental variables (temperature, vertical diffusivity, mixed layer depth and Photosynthetically Available Radiation) and observational data to validate the model are located in the INPUTS Directory. The INPUTS directory must be at the same level as the SPEAD1.0_temp or SPEAD1.0 directory.
 
 Please contact me (legland@icm.csic.es) if you cannot download, run or understand the model.
