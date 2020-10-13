@@ -133,9 +133,9 @@ sumFOOD     = ones(ndepths,1)*nan; %[depths]
 % FOOD     = PHY;
 for iphy = 1:nxphy
     for jphy = 1:nyphy
-        %FOODalfa(:,iphy,jphy) = PHY(:,iphy,jphy).^galfa;
+        FOODalfa(:,iphy,jphy) = PHY(:,iphy,jphy).^galfa;
         % KTW on size only
-        FOODalfa(:,iphy,jphy) = PHY(:,iphy,jphy).*((sum(PHY(:,iphy,:),3).^(galfa-1)));
+        %FOODalfa(:,iphy,jphy) = PHY(:,iphy,jphy).*((sum(PHY(:,iphy,:),3).^(galfa-1)));
         % FOODalfa(:,iphy,jphy) = PHY(:,iphy,jphy).*((sum(PHY(:,:,jphy),2).^(galfa-1)));
     end
 end
