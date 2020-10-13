@@ -212,7 +212,7 @@ if sum(galfa ~= 1) ~= 0
     for i=1:ndepths
        sigma(i,:,:)        = [xxvar(i), xycov(i); xycov(i), yyvar(i)];  % Variance matrix [trait^2]
        % This is only necessary in KTW mode (Le Gland, 26/11/2019)
-       % invsigma(i,:,:)     = inv(squeeze(sigma(i,:,:)));                % Inverse of variance matrix [trait^(-2)]
+       invsigma(i,:,:)     = inv(squeeze(sigma(i,:,:)));                % Inverse of variance matrix [trait^(-2)]
        detsigma(i)         = (xxvar(i) .* yyvar(i) - xycov(i).^2);      % Determinant of variance matrix [trait^4]
        detsigmasqrt(i)     = sqrt(detsigma(i));                         % Square root of variance determinant [trait^2]
        %vecj(i,:)           = [xj(i)-xmj(i),yj(i)-ymj(i)];               % Trait vector compared to mean trait [trait]
