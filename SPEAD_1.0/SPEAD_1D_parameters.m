@@ -121,8 +121,8 @@ ymax = 30;
 ysigmaPcnt = 0.025;
 %........................................................................
 % Number of species in the discrete model
-nxphy = 5; % Reference
-nyphy = 5; % Reference
+nxphy = 25; % Reference
+nyphy = 25; % Reference
 % Mutation rate per generation (for each trait)
 if strcmp(keyTraitDiffusion,'yes')
     numutX0 = 0.003;
