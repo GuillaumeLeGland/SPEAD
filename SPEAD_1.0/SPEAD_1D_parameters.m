@@ -58,7 +58,7 @@ mpower = 2.0; % Zoo mortality exponent (1=linear, 2=quadratic).
 % &&& mpower = 1.0; %Linear mortality.
 % &&& mpower = 1.4; 
 %........................................................................
-% Article values (24/08/2020)
+% Article values
 Q10a = 1.75; % Eppley Q10 coefficient for autotrophic processes (1.0 = no temperature effect)
 Q10h = 2.5; % Q10 coefficient for heterotrophic processes
 temp0 = 20; % Reference temperature
@@ -90,8 +90,8 @@ elseif strcmp(keyKTW,'yes')
 % $$$     galfa0 = 1.2; %weak KTW.
 % $$$     gbeta0 = 2.0; 
     %...............................................................................
-    galfa0 = 1.5; %moderate KTW.
-    gbeta0 = 2.0; 
+% $$$    galfa0 = 1.5; %moderate KTW.
+% $$$    gbeta0 = 2.0; 
     %...............................................................................
 % $$$     galfa0 = 1.6; %moderate KTW.
 % $$$     gbeta0 = 2.0; 
@@ -99,6 +99,8 @@ elseif strcmp(keyKTW,'yes')
 % $$$     galfa0 = 2.0; %strong KTW.
 % $$$     gbeta0 = 2.0; 
     %...............................................................................
+    galfa0 = 1.02;
+    gbeta0 = 2.0;
 end
 %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 %===================================================================================
@@ -121,12 +123,14 @@ ymax = 30;
 ysigmaPcnt = 0.025;
 %........................................................................
 % Number of species in the discrete model
-nxphy = 25; % Reference
-nyphy = 25; % Reference
+% nxphy = 25; % Article version
+% nyphy = 25; % Article version
+nxphy = 13; % Fast version
+nyphy = 13; % Fast version
 % Mutation rate per generation (for each trait)
 if strcmp(keyTraitDiffusion,'yes')
-    numutX0 = 0.003;
-    numutY0 = 0.03;
+    numutX0 = 0.001;
+    numutY0 = 0.01;
 elseif strcmp(keyTraitDiffusion,'not')
     numutX0 = 0;
     numutY0 = 0;

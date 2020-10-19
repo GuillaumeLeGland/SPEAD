@@ -1,6 +1,6 @@
 % This function plots two trade-offs: gleaner-opportunist and optimal
 % temperature for growth (Le Gland, 28/10/2019)
-function [ ] = jamstecrest_tradeoff(mup0,amup,xaxis,temp0,Q10,yaxis,fignum)
+function [ ] = SPEAD_1D_tradeoff(mup0,amup,xaxis,temp0,Q10,yaxis,fignum)
 
 % x-axis value of fx
 %nstep = 301; % Number of DIN values considered
@@ -125,7 +125,7 @@ xlim([10 38])
 set(gca,'Ylim',[0 2.0])
 legend({[repmat('Topt = ',[ny 1]),num2str(yaxis(:))]},'FontSize',8,'Location','NorthWest');
 %legend({[['T_{opt} = ';'T_{opt} = ';'T_{opt} = ';'T_{opt} = ';'T_{opt} = '],num2str(yaxis(:))]},'FontSize',15,'Location','NorthWest');
-xlabel(['Temperature [' char(176) 'C]'])
+xlabel('Temperature (Celsius)')
 ylabel('Growth factor  \gamma_T (n.d.)')
 title('b) Temperature-dependent growth factor of different phenotypes')
 
@@ -141,7 +141,7 @@ xlim([10 38])
 set(gca,'Ylim',[0 2.0])
 legend({[repmat('T = ',[ny 1]),num2str(yaxis(:))]},'FontSize',8,'Location','NorthWest');
 %legend({[['T = ';'T = ';'T = ';'T = ';'T = '],num2str(yaxis(:))]},'FontSize',15,'Location','NorthWest');
-xlabel(['Topt [' char(176) 'C]'])
+xlabel('Topt (Celsius)')
 ylabel('Growth factor  \gamma_T (n.d.)')
 title('d) Temperature-dependent growth factor at different temperatures')
 
@@ -158,7 +158,7 @@ set(gca,'ytick',[0:0.2:1.2])
 set(gca,'Ylim',[0 1.2])
 legend({[repmat('T = ',[ny 1]),num2str(yaxis(:))]},'FontSize',8,'Location','NorthWest');
 %legend({[['T = ';'T = ';'T = ';'T = ';'T = '],num2str(yaxis(:))]},'FontSize',15,'Location','NorthWest');
-xlabel(['Topt [' char(176) 'C]'])
+xlabel('Topt (Celsius)')
 ylabel('Relative competitive ability (n.d.)')
 title('f) Relative competitive abilities at different temperatures')
 

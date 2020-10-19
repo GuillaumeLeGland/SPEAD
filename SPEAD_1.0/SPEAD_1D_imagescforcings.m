@@ -1,4 +1,4 @@
-function [ ] = jamstecrest_imagescforcings(temp,parz0,par2D,mld,kz,fignum,mypackages)
+function [ ] = SPEAD_1D_imagescforcings(temp,parz0,par2D,mld,kz,fignum,mypackages)
 % Plots the forcing of the model (Temperature, irrradiance, mixed layer
 % depth and vertical diffusivity) (Le Gland, 29/10/2019)
 
@@ -20,7 +20,7 @@ set(hplot,'Xlim',[0 360  ],'Xtick',[0:30:360],'XtickLabel',num2str([0:30:360]'))
 ylabel(hplot,'Depth [m]')
 xlabel(hplot,'Time [days]')
 grid on
-title(['a) Temperature [' char(176) 'C]'])
+title('a) Temperature [Celsius]')
 
 % PAR subplot in 2D
 hplot = subplot(2,2,2);

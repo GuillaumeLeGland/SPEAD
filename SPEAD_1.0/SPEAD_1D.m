@@ -1,17 +1,17 @@
 %********************************************************************
-% PROGRAM: JAMSTEC_GAUSSCOMODEL1D.M
+% PROGRAM: SPEAD_1D.M
 %********************************************************************
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %FILE HEADER -- LOAD PACKAGES:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %********************************************************************
-
+more off
+close all
 clear all
+format short g
 %--------------------------------------------------------------------
-addpath('/MYFUNCTIONS/');
-%--------------------------------------------------------------------
-addpath(genpath('/MYTOOLBOX/MATLAB-LIBRERY/'));
+addpath(genpath('TOOLBOX/'));
 %--------------------------------------------------------------------
 %====================================================================
 %--------------------------------------------------------------------
@@ -140,9 +140,12 @@ parz0 = repmat(iparz0,[1,nyear]);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %STABILITY CONDITION FOR TURBULENCE SCHEME: 
 %(not really relevant when using "ode45" solver 
-% because it uses a variable adaptive dt)
+% because it uses a variable adaptive dt -- 
+% use then "ode4" which has aconstant dt)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %----------------------------------------------------------
+%ONLY NEEDED WHEN USING EXPLICIT SCHEMES -- 
+% NOT NEEDED WHEN USING IMPLICIT SCHEMES
 %======================================
 %--------------------------------------
 % dtdiff < min(dz^2/(2*kzI))
@@ -319,7 +322,6 @@ ntot0 = sum(BIO_V0(:)); %initial total mass over the column water [mmolN*m-3]
 ntot0pernode = ntot0/ndepths; %initial total mass at each grid cell [mmolN*m-3]
 %........................................................................
 %========================================================================
-%%return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %INITIAL CONDITIONS FOR THE DISCRETE TRAIT MODEL:
@@ -380,7 +382,7 @@ set(gca,'Ylim',[0.00 1.00])
 xlabel('log (half-sat)')
 ylabel('f (x)')
 grid on
-    %...................................................................................
+%...................................................................................
 pause(1)
 close all
 
@@ -411,7 +413,6 @@ grid on
 pause(0.5) 
 close all 
 pause(1)
-%%return
 %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 %........................................................................
 %========================================================================
@@ -482,9 +483,9 @@ for j = 1:length(nvar)-1
     %....................................................................
     Jstr = ['J',varname{j}];
     %....................................................................
-% $$$     assignin('base',Jstr,Jvarj); %NO USAR ESTAR FORMA.
+    %% assignin('base',Jstr,Jvarj); %DO NOT USE THIS OLD APPROACH
     %....................................................................
-    myassign = [Jstr,' = Jvarj;']; %USAR ESTA FORMA MEJOR FOR GLOBAL VARIABLES.
+    myassign = [Jstr,' = Jvarj;']; %BETTER TO USE THIS NEW APPROACH FOR GLOBAL VARIABLES
     %....................................................................
     eval(myassign)
     %....................................................................
@@ -550,26 +551,26 @@ toc
 if strcmp(key2T,'yes')
     tic
     [Voutcont] = ode4(@SPEAD_gaussecomodel1D_ode45eqs,tspan,V0);
+     Voutcont = Voutcont';
     toc
-    Voutcont = Voutcont';
 end
 %...................................................................................
 % Outputs from 1-trait models
 if strcmp(keyKN,'yes')
     tic
-    [Voutcont_K] = ode4(@SPEAD_gaussecomodel1D_ode45eqs_K,tspan,V0_K);
+    [Voutcont_K] = ode4(@SPEAD_gaussecomodel1D_ode45eqs_Ksat,tspan,V0_K);
+     Voutcont_K = Voutcont_K';
     toc
-    Voutcont_K = Voutcont_K';
 end
 if strcmp(keyTOPT,'yes')
     tic
-    [Voutcont_T] = ode4(@SPEAD_gaussecomodel1D_ode45eqs_T,tspan,V0_T);
+    [Voutcont_T] = ode4(@SPEAD_gaussecomodel1D_ode45eqs_Topt,tspan,V0_T);
+     Voutcont_T = Voutcont_T';
     toc
-    Voutcont_T = Voutcont_T';
 end
 %...................................................................................
 % Option to save all variables
-%save('SPEAD_1D_Voutcont.mat','Voutcont')
+%% save('SPEAD_1D_Voutcont.mat','Voutcont')
 %...................................................................................
 display('*** continuous model ode45 solving -- END ***')
 %...................................................................................
@@ -597,7 +598,7 @@ if strcmp(keyDisc,'yes')
     Voutdisc = Voutdisc';
 end
 %...................................................................................
-%save('SPEAD_1D_Voutdisc.mat','Voutdisc')
+%% save('SPEAD_1D_Voutdisc.mat','Voutdisc')
 %...................................................................................
 display('*** discrete model ode45 solving -- END ***')
 %...................................................................................
@@ -689,6 +690,7 @@ if strcmp(key2T,'yes') && strcmp(keyKN,'yes') && strcmp(keyTOPT,'yes')
 end
 %...................................................................................
 %===================================================================================
+%...................................................................................
 if strcmp(key2T,'yes') && strcmp(keyDisc,'yes')
     fignum = [24];
     SPEAD_1D_contvsdiscplot(PHYTsspdisc,PHYTsspcont,logESDphysspAveDisc,logESDphysspAveCont,...
@@ -696,7 +698,6 @@ if strcmp(key2T,'yes') && strcmp(keyDisc,'yes')
     TOPTphysspStdDisc,TOPTphysspStdCont,physspCorDisc,physspCorCont,ndepths,fignum);
 end
 %...................................................................................
-
 if strcmp(key2T,'yes') && strcmp(keyDisc,'yes')
     disp('Mean error and root mean square error on total phytoplankton, mean size and standard deviation (truth is the discrete model)')
     BiasPhy = mean(mean(PHYTsspcont - PHYTsspdisc)) / mean(mean(PHYTsspdisc))
@@ -706,7 +707,7 @@ if strcmp(key2T,'yes') && strcmp(keyDisc,'yes')
     BiasStd = mean(mean(logESDphysspStdCont - logESDphysspStdDisc)) / mean(mean(logESDphysspStdDisc))
     LSQStd  = sqrt(mean(mean((logESDphysspStdCont - logESDphysspStdDisc).^2))) / mean(mean(logESDphysspStdDisc))
 end
-
+%...................................................................................
 if strcmp(key2T,'yes')
     disp('Total primary production, mean phytoplankton, mean traits, variances and correlation weighted by phytoplankton in the continuous model')
     disp('Mnimum, average, and maximum')
@@ -720,10 +721,11 @@ if strcmp(key2T,'yes')
     TOPTstd_minavemax = [min(TOPTphysspStdCont(:)),sum(TOPTphysspStdCont(:).*PHYTsspcont(:))/sum(PHYTsspcont(:)),max(TOPTphysspStdCont(:))]
     Cor_minavemax = [min(physspCorCont(:)),sum(physspCorCont(:).*PHYTsspcont(:))/sum(PHYTsspcont(:)),max(physspCorCont(:))]
 end
-
+%...................................................................................
 % Function to check convergence
 if strcmp(key2T,'yes')
     [conv_P,conv_xave,conv_yave,conv_xxvar,conv_yyvar,conv_xycor] = SPEAD_1D_convergence_check(PHYTodecont,XAVE_odecont,YAVE_odecont,XXVAR_odecont,YYVAR_odecont,XYCOV_odecont,ndays);
 end
 %...................................................................................
+%***********************************************************************************
 return
