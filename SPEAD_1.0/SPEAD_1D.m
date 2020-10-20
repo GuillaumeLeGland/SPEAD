@@ -1,4 +1,11 @@
 %********************************************************************
+% SPEAD (Simulating Plankton Evolution with Adaptive Dynamics) version 1.0
+% Code written by Guillaume Le Gland and Sergio M. Vallina
+% Published on the 20th of October 2020
+% Presented in Le Gland et al., 2020, under review in GMD.
+%********************************************************************
+
+%********************************************************************
 % PROGRAM: SPEAD_1D.M
 %********************************************************************
 
