@@ -22,7 +22,8 @@ addpath(genpath('TOOLBOX/'));
 %--------------------------------------------------------------------
 %====================================================================
 %--------------------------------------------------------------------
-[mypackages] = myheadloadpackages; %Structure array to pass on my head pkg as input argument to functions.
+doPlotting=false;
+[mypackages] = myheadloadpackages(doPlotting); %Structure array to pass on my head pkg as input argument to functions.
 %--------------------------------------------------------------------
 %MY PACKAGES FOR PLOTING:
 subplot_funhan  = mypackages.subplot;
@@ -31,15 +32,17 @@ verticales = mypackages.verticales;
 horizontal = mypackages.horizontal;
 %--------------------------------------------------------------------
 %JUST CHECKING IF PLOTING WORKS OKAY:
-A256 = peaks(256);
-A128x256 = A256(1:2:256,:);
-A = A128x256;
-Amin = min(A(:));
-Amax = max(A(:));
-fignum = 1001;
-[hcbar] = SPEAD_1D_subplotesting(A,Amin,Amax,fignum,mypackages);
-pause(0.5)
-close all
+if doPlotting
+    A256 = peaks(256);
+    A128x256 = A256(1:2:256,:);
+    A = A128x256;
+    Amin = min(A(:));
+    Amax = max(A(:));
+    fignum = 1001;
+    [hcbar] = SPEAD_1D_subplotesting(A,Amin,Amax,fignum,mypackages);
+    pause(0.5)
+    close all
+end
 %--------------------------------------------------------------------
 %====================================================================
 %********************************************************************
@@ -220,13 +223,15 @@ end
 %........................................................................
 %========================================================================
 
-% Plot external forcings
-fignum = 14;
-SPEAD_1D_imagescforcings(itemp,iparz0,PAR2D,imld,iKZ,fignum,mypackages)
+if doPlotting
+    % Plot external forcings
+    fignum = 14;
+    SPEAD_1D_imagescforcings(itemp,iparz0,PAR2D,imld,iKZ,fignum,mypackages)
 
-% Plot trade-offs
-fignum = 15;
-SPEAD_1D_tradeoff(mup0,amup,[0.1,0.5,2.0],temp0,Q10a,18:4:30,fignum);
+    % Plot trade-offs
+    fignum = 15;
+    SPEAD_1D_tradeoff(mup0,amup,[0.1,0.5,2.0],temp0,Q10a,18:4:30,fignum);
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %INITIAL CONDITIONS FOR THE CONTINOUS TRAIT MODEL:
@@ -366,32 +371,34 @@ fytraitphy = (1.0 / (ysigma * sqrt(2*pi))) * exp( -(yaxis - ymean).^2 / (2*ysigm
 fxytraitphy = fxtraitphy'*fytraitphy;
 %........................................................................
 %========================================================================
-figure(2020)
-%...................................................................................
-subplot(2,2,1)
-plot(xaxis,fxtraitphy,'k-',xaxis,fxtraitphy,'b.')
-hold on
-plot(xless,0,'r*',xplus,0,'r*')
-hold off
-set(gca,'Xlim',[xmin xmax])
-set(gca,'Ylim',[0.00 1.00])
-xlabel('log (size)')
-ylabel('f (x)')
-grid on
-%...................................................................................
-subplot(2,2,3)
-plot(Kn,fxtraitphy,'k-',Kn,fxtraitphy,'b.')
-hold on
-plot(Knless,0,'r*',Knplus,0,'r*')
-hold off
-set(gca,'Xlim',[Knmin Knmax])
-set(gca,'Ylim',[0.00 1.00])
-xlabel('log (half-sat)')
-ylabel('f (x)')
-grid on
-%...................................................................................
-pause(1)
-close all
+if doPlotting
+    figure(2020)
+    %...................................................................................
+    subplot(2,2,1)
+    plot(xaxis,fxtraitphy,'k-',xaxis,fxtraitphy,'b.')
+    hold on
+    plot(xless,0,'r*',xplus,0,'r*')
+    hold off
+    set(gca,'Xlim',[xmin xmax])
+    set(gca,'Ylim',[0.00 1.00])
+    xlabel('log (size)')
+    ylabel('f (x)')
+    grid on
+    %...................................................................................
+    subplot(2,2,3)
+    plot(Kn,fxtraitphy,'k-',Kn,fxtraitphy,'b.')
+    hold on
+    plot(Knless,0,'r*',Knplus,0,'r*')
+    hold off
+    set(gca,'Xlim',[Knmin Knmax])
+    set(gca,'Ylim',[0.00 1.00])
+    xlabel('log (half-sat)')
+    ylabel('f (x)')
+    grid on
+    %...................................................................................
+    pause(1)
+    close all
+end
 
 %========================================================================
 %FOR GAUSSIAN DISTRIBUTION OF INITIAL CONDITIONS OF PHYTOPLANKTON: 
@@ -409,17 +416,19 @@ PONdisc0 = pon0 * ones(ndepths*npon,1);
 BOXdisc0 = box0 * ones(ndepths*nbox,1);
 %........................................................................
 %>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-%........................................................................
-figure(10)
-plot(xaxis,fxtraitphy,'-b')
-hold on
-plot(xaxis,fxtraitphy,'r*')
-hold off
-grid on
-%........................................................................
-pause(0.5) 
-close all 
-pause(1)
+if doPlotting
+    %........................................................................
+    figure(10)
+    plot(xaxis,fxtraitphy,'-b')
+    hold on
+    plot(xaxis,fxtraitphy,'r*')
+    hold off
+    grid on
+    %........................................................................
+    pause(0.5) 
+    close all 
+    pause(1)
+end
 %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 %........................................................................
 %========================================================================
@@ -638,7 +647,7 @@ SPEAD_1D_analysis % Script to analyze the model outputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %===================================================================================
 %CONTINOUS:
-if strcmp(key2T,'yes')
+if strcmp(key2T,'yes')&&doPlotting
     %...................................................................................
     fignum = 1010;
     [hfig1010] = SPEAD_1D_imagescuptakerates(MUPsspcont,MUZsspcont,NTOTsspcont,ndepths,ndays,MUPmin,MUPmax,...
@@ -661,7 +670,7 @@ if strcmp(key2T,'yes')
 end
 %===================================================================================
 %DISCRETE:
-if strcmp(keyDisc,'yes')
+if strcmp(keyDisc,'yes')&&doPlotting
     %...................................................................................
     fignum = 2010;
     [hfig2010] = SPEAD_1D_imagescuptakerates(MUPsspdisc,MUZsspdisc,NTOTsspdisc,ndepths,ndays,MUPmin,MUPmax,...
@@ -684,12 +693,12 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %===================================================================================
 %...................................................................................
-if strcmp(key2T,'yes') && strcmp(keyDisc,'yes') && strcmp(keyModelResol,'1D')
+if strcmp(key2T,'yes') && strcmp(keyDisc,'yes') && strcmp(keyModelResol,'1D') && doPlotting
     fignum = [70];
     SPEAD_1D_distribution(PHYTsspcont,logESDphysspAveCont,logESDphysspStdCont,TOPTphysspAveCont,TOPTphysspStdCont,physspCorCont,PHYsspdisc3D,xaxis,yaxis,itemp,DINsspdisc,fignum);
 end
 %...................................................................................
-if strcmp(key2T,'yes') && strcmp(keyKN,'yes') && strcmp(keyTOPT,'yes') 
+if strcmp(key2T,'yes') && strcmp(keyKN,'yes') && strcmp(keyTOPT,'yes')  && doPlotting
     fignum = [80];
     SPEAD_gaussecomodel1D_surftraitplot(DINsspcont,DINsspcont_K,temp(:,1:360),...
     PHYTsspcont,PHYTsspcont_K,PHYTsspcont_T,XAVE_sspcont,XAVE_sspcont_K,XSTD_sspcont,XSTD_sspcont_K,...
@@ -698,7 +707,7 @@ end
 %...................................................................................
 %===================================================================================
 %...................................................................................
-if strcmp(key2T,'yes') && strcmp(keyDisc,'yes')
+if strcmp(key2T,'yes') && strcmp(keyDisc,'yes') && doPlotting
     fignum = [24];
     SPEAD_1D_contvsdiscplot(PHYTsspdisc,PHYTsspcont,logESDphysspAveDisc,logESDphysspAveCont,...
     TOPTphysspAveDisc,TOPTphysspAveCont,logESDphysspStdDisc,logESDphysspStdCont,...
