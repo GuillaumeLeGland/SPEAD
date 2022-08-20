@@ -210,8 +210,8 @@ if strcmp(keyPARseasonality,'not')
     PAR2D = exp(-kw*zdepths(:))*iparz0;
 end
 
-dat14={itemp,iparz0,PAR2D,imld,iKZ,14,mypackages}
-dat15={mup0,amup,[0.1,0.5,2.0],temp0,Q10a,18:4:30,15}
+dat14={itemp,iparz0,PAR2D,imld,iKZ,14,mypackages};
+dat15={mup0,amup,[0.1,0.5,2.0],temp0,Q10a,18:4:30,15};
 
 %........................................................................
 %========================================================================
@@ -355,7 +355,7 @@ fxytraitphy = fxtraitphy'*fytraitphy;
 %........................................................................
 %========================================================================
 
-dat2020a={xaxis,fxtraitphy,xless,xplus,xmin,xmax,Knless,Knplus,Knmin,Knmax}
+dat2020a={xaxis,fxtraitphy,xless,xplus,xmin,xmax,Knless,Knplus,Knmin,Knmax};
 
 %========================================================================
 %FOR GAUSSIAN DISTRIBUTION OF INITIAL CONDITIONS OF PHYTOPLANKTON: 
