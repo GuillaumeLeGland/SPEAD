@@ -1,10 +1,10 @@
-function [mypackages] = myheadloadpackages()
+function [mypackages] = myheadloadpackages(doPlotting)
 
 %****************************************************************************
 % PROGRAM: MYHEADLOADPACKAGES.M
 %
 % ## Use: myheadloadpackages
-% Use: [subplot_funhan,colorbar_funhan,verticales,horizontal] = myheadloadpackages;
+% Use: [subplot_funhan,colorbar_funhan,verticales,horizontal] = myheadloadpackages(doPlotting);
 %
 %****************************************************************************
 
@@ -25,10 +25,10 @@ function [mypackages] = myheadloadpackages()
 %============================================================================
 % LOAD COMMON PACKAGES:
 %----------------------------------------------------------------------------
-more off
-close all
-clear all
-format short g
+%more off
+%close all
+%clear all
+%format short g
 %----------------------------------------------------------------------------
 % $$$ addpath('~/SERVAL/SER24/PROGRAMMING/MATLAB/PROGRAMAS/MYFUNCTIONS/');
 %----------------------------------------------------------------------------
@@ -87,17 +87,21 @@ elseif uiIsOctave == 1 %OCTAVE
     % <https://stackoverflow.com/questions/41040999/speed-up-printing-of-mesh-in-octave>
     %%FunctionName_Colorbar = 'colorbar';
     FunctionName_Colorbar = 'mycolorbarOctave3p4';
-    colorbar_location = get(eval(FunctionName_Colorbar),'Location');
+    if doPlotting
+        colorbar_location = get(eval(FunctionName_Colorbar),'Location');
+    end
     colorbar_location_vertical = 'EastOutside';
     colorbar_location_horizont = 'SouthOutside';
     close all
     FunctionHandle_Colorbar = str2func(FunctionName_Colorbar);
     colorbar_funhan = FunctionHandle_Colorbar;
     available_graphics_toolkits()
-    graphics_toolkit('fltk') %FASTER FOR IMAGESC BUT SLOWER FOR PLOTTING
-    %%graphics_toolkit('gnuplot') %FASTER FOR PLOT BUT SLOWER FOR IMAGESC
+    if doPlotting
+        graphics_toolkit('fltk') %FASTER FOR IMAGESC BUT SLOWER FOR PLOTTING
+        %%graphics_toolkit('gnuplot') %FASTER FOR PLOT BUT SLOWER FOR IMAGESC
+    end
     gnuplot_binary('gnuplot')
-    jit_enable(0)  %JIT accelarator -- disabled (0) or enabled (1)
+    %jit_enable(0)  %JIT accelarator -- disabled (0) or enabled (1)
     %%jit_enable_asking = jit_enable %%JIT accelarator when disabled (0) or enabled (1)
 end
 %============================================================================
@@ -115,17 +119,19 @@ FunctionHandle_subplot = str2func(FunctionName_subplot);
 subplot_funhan = FunctionHandle_subplot;
 %----------------------------------------------------------------------------
 %JUST CHECKING IF PLOTTING (SUBPLOT AND COLORBAR) IS WORKING OKAY:
-figure(1)
-subplot_funhan(2,2,1);
-hcbar = colorbar_funhan(verticales); 
-subplot_funhan(2,2,2);
-hcbar = colorbar_funhan(horizontal);
-%----------------------------------------------------------------------------
-subplot_funhan
-colorbar_funhan
-disp('** Just checking MATLAB / OCTAVE plotting -- please wait 1 sec **')
-pause(0.5)
-close all
+if doPlotting
+    figure(1)
+    subplot_funhan(2,2,1);
+    hcbar = colorbar_funhan(verticales); 
+    subplot_funhan(2,2,2);
+    hcbar = colorbar_funhan(horizontal);
+    %----------------------------------------------------------------------------
+    subplot_funhan
+    colorbar_funhan
+    disp('** Just checking MATLAB / OCTAVE plotting -- please wait 1 sec **')
+    pause(0.5)
+    close all
+end
 %----------------------------------------------------------------------------
 %============================================================================
 %OUTPUTS:

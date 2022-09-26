@@ -13,33 +13,26 @@
 %FILE HEADER -- LOAD PACKAGES:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %********************************************************************
-more off
-close all
-clear all
-format short g
+% more off
+% close all
+% clear all
+% format short g
 %--------------------------------------------------------------------
-addpath(genpath('TOOLBOX/'));
+% addpath(genpath('TOOLBOX/'));
 %--------------------------------------------------------------------
 %====================================================================
 %--------------------------------------------------------------------
-[mypackages] = myheadloadpackages; %Structure array to pass on my head pkg as input argument to functions.
+
+function [dat14,dat15,dat2020a,dat1010,dat1020,dat1022,dat1030,...
+    dat2010,dat2020,dat2030,dat70,dat80,dat24]=SPEAD_1D()
+
+[mypackages] = myheadloadpackages(false); %Structure array to pass on my head pkg as input argument to functions.
 %--------------------------------------------------------------------
 %MY PACKAGES FOR PLOTING:
 subplot_funhan  = mypackages.subplot;
 colorbar_funhan = mypackages.colorbar;
 verticales = mypackages.verticales;
 horizontal = mypackages.horizontal;
-%--------------------------------------------------------------------
-%JUST CHECKING IF PLOTING WORKS OKAY:
-A256 = peaks(256);
-A128x256 = A256(1:2:256,:);
-A = A128x256;
-Amin = min(A(:));
-Amax = max(A(:));
-fignum = 1001;
-[hcbar] = SPEAD_1D_subplotesting(A,Amin,Amax,fignum,mypackages);
-pause(0.5)
-close all
 %--------------------------------------------------------------------
 %====================================================================
 %********************************************************************
@@ -217,16 +210,11 @@ if strcmp(keyPARseasonality,'not')
     PAR2D = exp(-kw*zdepths(:))*iparz0;
 end
 
+dat14={itemp,iparz0,PAR2D,imld,iKZ,14,mypackages};
+dat15={mup0,amup,[0.1,0.5,2.0],temp0,Q10a,18:4:30,15};
+
 %........................................................................
 %========================================================================
-
-% Plot external forcings
-fignum = 14;
-SPEAD_1D_imagescforcings(itemp,iparz0,PAR2D,imld,iKZ,fignum,mypackages)
-
-% Plot trade-offs
-fignum = 15;
-SPEAD_1D_tradeoff(mup0,amup,[0.1,0.5,2.0],temp0,Q10a,18:4:30,fignum);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %INITIAL CONDITIONS FOR THE CONTINOUS TRAIT MODEL:
@@ -366,32 +354,8 @@ fytraitphy = (1.0 / (ysigma * sqrt(2*pi))) * exp( -(yaxis - ymean).^2 / (2*ysigm
 fxytraitphy = fxtraitphy'*fytraitphy;
 %........................................................................
 %========================================================================
-figure(2020)
-%...................................................................................
-subplot(2,2,1)
-plot(xaxis,fxtraitphy,'k-',xaxis,fxtraitphy,'b.')
-hold on
-plot(xless,0,'r*',xplus,0,'r*')
-hold off
-set(gca,'Xlim',[xmin xmax])
-set(gca,'Ylim',[0.00 1.00])
-xlabel('log (size)')
-ylabel('f (x)')
-grid on
-%...................................................................................
-subplot(2,2,3)
-plot(Kn,fxtraitphy,'k-',Kn,fxtraitphy,'b.')
-hold on
-plot(Knless,0,'r*',Knplus,0,'r*')
-hold off
-set(gca,'Xlim',[Knmin Knmax])
-set(gca,'Ylim',[0.00 1.00])
-xlabel('log (half-sat)')
-ylabel('f (x)')
-grid on
-%...................................................................................
-pause(1)
-close all
+
+dat2020a={xaxis,fxtraitphy,xless,xplus,xmin,xmax,Knless,Knplus,Knmin,Knmax};
 
 %========================================================================
 %FOR GAUSSIAN DISTRIBUTION OF INITIAL CONDITIONS OF PHYTOPLANKTON: 
@@ -407,20 +371,6 @@ ZOOdisc0 = zoo0 * ones(ndepths*nzoo,1);
 DINdisc0 = din0 * ones(ndepths*ndin,1);
 PONdisc0 = pon0 * ones(ndepths*npon,1);
 BOXdisc0 = box0 * ones(ndepths*nbox,1);
-%........................................................................
-%>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-%........................................................................
-figure(10)
-plot(xaxis,fxtraitphy,'-b')
-hold on
-plot(xaxis,fxtraitphy,'r*')
-hold off
-grid on
-%........................................................................
-pause(0.5) 
-close all 
-pause(1)
-%<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 %........................................................................
 %========================================================================
 %COLUMN VECTOR OF INITIAL CONDITIONS:
@@ -641,22 +591,22 @@ SPEAD_1D_analysis % Script to analyze the model outputs
 if strcmp(key2T,'yes')
     %...................................................................................
     fignum = 1010;
-    [hfig1010] = SPEAD_1D_imagescuptakerates(MUPsspcont,MUZsspcont,NTOTsspcont,ndepths,ndays,MUPmin,MUPmax,...
-        MUZmin,MUZmax,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages);
+    dat1010 = {MUPsspcont,MUZsspcont,NTOTsspcont,ndepths,ndays,MUPmin,MUPmax,...
+        MUZmin,MUZmax,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages};
     %...................................................................................
     fignum = 1020;
-    [hfig1020] = SPEAD_1D_imagescNPZD(NTOTsspcont,CHLsspcont,PPsspcont,ZOOsspcont,DINsspcont,PONsspcont,ndepths,ndays,PHYmin,PHYmax,...
-        ZOOmin,ZOOmax,DINmin,DINmax,PONmin,PONmax,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages);
+    dat1020 = {NTOTsspcont,CHLsspcont,PPsspcont,ZOOsspcont,DINsspcont,PONsspcont,ndepths,ndays,PHYmin,PHYmax,...
+        ZOOmin,ZOOmax,DINmin,DINmax,PONmin,PONmax,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages};
     %...................................................................................
     % Compare model and observations
     fignum = 1022;
-    [hfig1022] = SPEAD_gaussecomodel1D_imagescmodvsobs(12*(106/16)*PP_obs,CHL_obs,NO3_obs,PON_obs,12*(106/16)*PPsspcont,...
-        CHLsspcont,DINsspcont,PONsspcont,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages);
+    dat1022 = {12*(106/16)*PP_obs,CHL_obs,NO3_obs,PON_obs,12*(106/16)*PPsspcont,...
+        CHLsspcont,DINsspcont,PONsspcont,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages};
     %...................................................................................
     fignum = 1030;
-    [hfig1030] = SPEAD_1D_imagescstatistics(logESDphysspAveCont,logESDphysspStdCont,TOPTphysspAveCont,TOPTphysspStdCont,physspCorCont,PHYTsspcont,...
+    dat1030 = {logESDphysspAveCont,logESDphysspStdCont,TOPTphysspAveCont,TOPTphysspStdCont,physspCorCont,PHYTsspcont,...
         ndepths,ndays,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,logESDaveMax,logESDaveMin,logESDstdMax,logESDstdMin,...
-        TOPTaveMax,TOPTaveMin,TOPTstdMax,TOPTstdMin,CorrelationAbsMax,fignum,mypackages);
+        TOPTaveMax,TOPTaveMin,TOPTstdMax,TOPTstdMin,CorrelationAbsMax,fignum,mypackages};
     %...................................................................................
 end
 %===================================================================================
@@ -664,17 +614,17 @@ end
 if strcmp(keyDisc,'yes')
     %...................................................................................
     fignum = 2010;
-    [hfig2010] = SPEAD_1D_imagescuptakerates(MUPsspdisc,MUZsspdisc,NTOTsspdisc,ndepths,ndays,MUPmin,MUPmax,...
-        MUZmin,MUZmax,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages);
+    dat2010 = {MUPsspdisc,MUZsspdisc,NTOTsspdisc,ndepths,ndays,MUPmin,MUPmax,...
+        MUZmin,MUZmax,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages};
     %...................................................................................
     fignum = 2020;
-    [hfig2020] = SPEAD_1D_imagescNPZD(NTOTsspdisc,CHLsspdisc,PPsspdisc,ZOOsspdisc,DINsspdisc,PONsspdisc,ndepths,ndays,PHYmin,PHYmax,...
-        ZOOmin,ZOOmax,DINmin,DINmax,PONmin,PONmax,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages);
+    dat2020 = {NTOTsspdisc,CHLsspdisc,PPsspdisc,ZOOsspdisc,DINsspdisc,PONsspdisc,ndepths,ndays,PHYmin,PHYmax,...
+        ZOOmin,ZOOmax,DINmin,DINmax,PONmin,PONmax,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,fignum,mypackages};
     %...................................................................................
     fignum = 2030;
-    [hfig2030] = SPEAD_1D_imagescstatistics(logESDphysspAveDisc,logESDphysspStdDisc,TOPTphysspAveDisc,TOPTphysspStdDisc,physspCorDisc,PHYTsspdisc,...
+    dat2030 = {logESDphysspAveDisc,logESDphysspStdDisc,TOPTphysspAveDisc,TOPTphysspStdDisc,physspCorDisc,PHYTsspdisc,...
         ndepths,ndays,myXtickMarks,myXtickLabel,myYtickMarks,myYtickLabel,myYaxisLabel,logESDaveMax,logESDaveMin,logESDstdMax,logESDstdMin,...
-        TOPTaveMax,TOPTaveMin,TOPTstdMax,TOPTstdMin,CorrelationAbsMax,fignum,mypackages);
+        TOPTaveMax,TOPTaveMin,TOPTstdMax,TOPTstdMin,CorrelationAbsMax,fignum,mypackages};
     %...................................................................................
 end
 %===================================================================================
@@ -683,27 +633,29 @@ end
 %PLOTS OF TRAIT DISTRIBUTION:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %===================================================================================
-%...................................................................................
 if strcmp(key2T,'yes') && strcmp(keyDisc,'yes') && strcmp(keyModelResol,'1D')
     fignum = [70];
-    SPEAD_1D_distribution(PHYTsspcont,logESDphysspAveCont,logESDphysspStdCont,TOPTphysspAveCont,TOPTphysspStdCont,physspCorCont,PHYsspdisc3D,xaxis,yaxis,itemp,DINsspdisc,fignum);
+    dat70 = {PHYTsspcont,logESDphysspAveCont,logESDphysspStdCont,TOPTphysspAveCont,TOPTphysspStdCont,physspCorCont,PHYsspdisc3D,xaxis,yaxis,itemp,DINsspdisc,fignum};
 end
 %...................................................................................
-if strcmp(key2T,'yes') && strcmp(keyKN,'yes') && strcmp(keyTOPT,'yes') 
+if strcmp(key2T,'yes') && strcmp(keyKN,'yes') && strcmp(keyTOPT,'yes')
     fignum = [80];
-    SPEAD_gaussecomodel1D_surftraitplot(DINsspcont,DINsspcont_K,temp(:,1:360),...
+    dat80 = {DINsspcont,DINsspcont_K,temp(:,1:360),...
     PHYTsspcont,PHYTsspcont_K,PHYTsspcont_T,XAVE_sspcont,XAVE_sspcont_K,XSTD_sspcont,XSTD_sspcont_K,...
-    YAVE_sspcont,YAVE_sspcont_T,YSTD_sspcont,YSTD_sspcont_T,XYCOR_sspcont,fignum);
+    YAVE_sspcont,YAVE_sspcont_T,YSTD_sspcont,YSTD_sspcont_T,XYCOR_sspcont,fignum};
 end
 %...................................................................................
 %===================================================================================
 %...................................................................................
 if strcmp(key2T,'yes') && strcmp(keyDisc,'yes')
     fignum = [24];
-    SPEAD_1D_contvsdiscplot(PHYTsspdisc,PHYTsspcont,logESDphysspAveDisc,logESDphysspAveCont,...
+    dat24 = {PHYTsspdisc,PHYTsspcont,logESDphysspAveDisc,logESDphysspAveCont,...
     TOPTphysspAveDisc,TOPTphysspAveCont,logESDphysspStdDisc,logESDphysspStdCont,...
-    TOPTphysspStdDisc,TOPTphysspStdCont,physspCorDisc,physspCorCont,ndepths,fignum);
+    TOPTphysspStdDisc,TOPTphysspStdCont,physspCorDisc,physspCorCont,ndepths,fignum};
 end
+%...................................................................................
+
+%===================================================================================
 %...................................................................................
 if strcmp(key2T,'yes') && strcmp(keyDisc,'yes')
     disp('Mean error and root mean square error on total phytoplankton, mean size and standard deviation (truth is the discrete model)')
@@ -735,4 +687,7 @@ if strcmp(key2T,'yes')
 end
 %...................................................................................
 %***********************************************************************************
-return
+% return
+
+end %function []=SPEAD_1D_main()
+
